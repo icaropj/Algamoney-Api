@@ -3,6 +3,8 @@ package br.com.icaropinho.algamoney.api.resource;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +31,7 @@ public class CategoriaResource {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Categoria> criar(@RequestBody Categoria categoria) {
+	public ResponseEntity<Categoria> criar(@RequestBody @Valid Categoria categoria) {
 		Categoria categoriaSalva = categoriaRepositorio.save(categoria);
 		URI uri = ServletUriComponentsBuilder
 			.fromCurrentRequestUri()
