@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -33,7 +34,7 @@ public class Lancamento {
 	
 	private String observacao;
 	
-	@Enumerated
+	@Enumerated(EnumType.STRING)
 	private TipoLancamento tipo;
 	
 	@ManyToOne
