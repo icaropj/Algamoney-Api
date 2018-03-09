@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import br.com.icaropinho.algamoney.api.exception.PessoaInexistenteOuInativaException;
+
 @ControllerAdvice
 public class AlgamoneyExceptionHandler extends ResponseEntityExceptionHandler{
 
@@ -58,6 +60,14 @@ public class AlgamoneyExceptionHandler extends ResponseEntityExceptionHandler{
 		String mensagemDev = ExceptionUtils.getRootCauseMessage(ex);
 		Erro erro = new Erro(mensagemUsuario, mensagemDev);
 		return handleExceptionInternal(ex, erro, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
+	
+	@ExceptionHandler({ PessoaInexistenteOuInativaException.class })
+	public ResponseEntity<Object> handlePessoaInexistenteOuInativaException(PessoaInexistenteOuInativaException ex, WebRequest request) {
+		String mensagemUsuario = messageSource.getMessage("pessoa.inexistente-ou-inativa", null, LocaleContextHolder.getLocale());
+		String mensagemDev = ex.toString();
+		Erro erro = new Erro(mensagemUsuario, mensagemDev);
+		return ResponseEntity.badRequest().body(erro); 
 	}
 	
 	private List<Erro> criaListaErros(BindingResult bindingResult) {
