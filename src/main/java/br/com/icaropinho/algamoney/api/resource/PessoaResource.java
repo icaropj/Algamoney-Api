@@ -5,10 +5,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,10 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.icaropinho.algamoney.api.event.RecursoCriadoEvent;
 import br.com.icaropinho.algamoney.api.model.Pessoa;
 import br.com.icaropinho.algamoney.api.repositorio.PessoaRepositorio;
+import br.com.icaropinho.algamoney.api.service.PessoaService;
 
 @RestController
 @RequestMapping("/pessoas")
 public class PessoaResource {
+	
+	@Autowired
+	private PessoaService pessoaService;
 
 	@Autowired
 	private PessoaRepositorio pessoaRepositorio;
@@ -63,13 +65,7 @@ public class PessoaResource {
 	
 	@PutMapping("/{codigo}")
 	public ResponseEntity<Pessoa> atualizar(@RequestBody @Valid Pessoa pessoa, @PathVariable("codigo") Long codigo){
-		Pessoa pessoaSalva = pessoaRepositorio.findOne(codigo);
-		if(pessoaSalva == null) {
-			throw new EmptyResultDataAccessException(1);
-		}
-		BeanUtils.copyProperties(pessoa, pessoaSalva, "codigo");
-		pessoaRepositorio.save(pessoaSalva);
-		return ResponseEntity.ok(pessoaSalva);
+		return ResponseEntity.ok(pessoaService.atualizar(pessoa, codigo));
 	}
 	
 }
