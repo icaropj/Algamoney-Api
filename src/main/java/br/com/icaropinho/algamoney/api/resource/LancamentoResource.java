@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.icaropinho.algamoney.api.event.RecursoCriadoEvent;
 import br.com.icaropinho.algamoney.api.model.Lancamento;
 import br.com.icaropinho.algamoney.api.repositorio.LancamentoRepositorio;
+import br.com.icaropinho.algamoney.api.repositorio.filter.LancamentoFilter;
 import br.com.icaropinho.algamoney.api.service.LancamentoService;
 
 @RestController
@@ -35,8 +36,8 @@ public class LancamentoResource {
 	private ApplicationEventPublisher publisher;
 
 	@GetMapping
-	public List<Lancamento> listar(){
-		return lancamentoRepositorio.findAll();
+	public List<Lancamento> pesquisar(LancamentoFilter filtro){
+		return lancamentoRepositorio.filtrar(filtro);
 	}
 	
 	@GetMapping("/{codigo}")
