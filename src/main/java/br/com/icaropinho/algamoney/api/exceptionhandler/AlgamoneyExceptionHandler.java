@@ -22,6 +22,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import br.com.icaropinho.algamoney.api.exception.PessoaInexistenteOuInativaException;
+import br.com.icaropinho.algamoney.api.exception.RegistroNaoEncontradoException;
 
 @ControllerAdvice
 public class AlgamoneyExceptionHandler extends ResponseEntityExceptionHandler{
@@ -48,6 +49,14 @@ public class AlgamoneyExceptionHandler extends ResponseEntityExceptionHandler{
 	
 	@ExceptionHandler( {EmptyResultDataAccessException.class} )
 	public ResponseEntity<Object> handleEmptyResultDataAccessException(EmptyResultDataAccessException ex, WebRequest request) {
+		String mensagemUsuario = messageSource.getMessage("recurso.nao-encontrado", null, LocaleContextHolder.getLocale());
+		String mensagemDev = ex.toString();
+		Erro erro = new Erro(mensagemUsuario, mensagemDev);
+		return handleExceptionInternal(ex, erro, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+	}
+	
+	@ExceptionHandler( {RegistroNaoEncontradoException.class} )
+	public ResponseEntity<Object> handleRegistroNaoEncontradoException(RegistroNaoEncontradoException ex, WebRequest request) {
 		String mensagemUsuario = messageSource.getMessage("recurso.nao-encontrado", null, LocaleContextHolder.getLocale());
 		String mensagemDev = ex.toString();
 		Erro erro = new Erro(mensagemUsuario, mensagemDev);
