@@ -23,6 +23,7 @@ import br.com.icaropinho.algamoney.api.event.RecursoCriadoEvent;
 import br.com.icaropinho.algamoney.api.model.Lancamento;
 import br.com.icaropinho.algamoney.api.repositorio.LancamentoRepositorio;
 import br.com.icaropinho.algamoney.api.repositorio.filter.LancamentoFilter;
+import br.com.icaropinho.algamoney.api.repositorio.projection.ResumoLancamento;
 import br.com.icaropinho.algamoney.api.service.LancamentoService;
 
 @RestController
@@ -42,6 +43,12 @@ public class LancamentoResource {
 	@GetMapping
 	public Page<Lancamento> pesquisar(LancamentoFilter filtro, Pageable pageable){
 		return lancamentoRepositorio.filtrar(filtro, pageable);
+	}
+	
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+	@GetMapping(params = "resumo")
+	public Page<ResumoLancamento> resumir(LancamentoFilter filtro, Pageable pageable){
+		return lancamentoRepositorio.resumir(filtro, pageable);
 	}
 	
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")

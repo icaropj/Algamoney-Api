@@ -4,11 +4,14 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import br.com.icaropinho.algamoney.api.config.property.AlgamoneyApiProperty;
 
 /**
  * Classe para fazer logout -> Simplesmente tirar o valor de refreshToken
@@ -18,12 +21,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/tokens")
 public class TokenResource {
+	
+	@Autowired
+	private AlgamoneyApiProperty algamoneyApiProperty;
 
 	@DeleteMapping("/revoke")
 	public void revoke(HttpServletRequest req, HttpServletResponse resp) {
 		Cookie cookie = new Cookie("refreshToken", null);
 		cookie.setHttpOnly(true);
-		cookie.setSecure(false); //TODO: Em produção será true
+		cookie.setSecure(algamoneyApiProperty.getSeguranca().isEnableHttps()); 
 		cookie.setPath(req.getContextPath() + "/oauth/token");
 		cookie.setMaxAge(0);
 		
